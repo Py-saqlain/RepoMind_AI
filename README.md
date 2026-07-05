@@ -159,7 +159,7 @@ Open `frontend/index.html` directly in your browser.
 
 ## Author
 
-Built by [Your Name] — Software Engineer specializing in Python, .NET, and LLM/RAG systems.
+Built by Saqlain — Software Engineer specializing in Python, .NET, and LLM/RAG systems.
 
 - GitHub: [Py-saqlain](https://github.com/Py-saqlain)
 - HuggingFace: [py-saqlain](https://huggingface.co/py-saqlain)
