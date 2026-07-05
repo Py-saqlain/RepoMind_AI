@@ -2,7 +2,7 @@
 
 Chat with any GitHub repository. Paste a repo URL, index it, and ask natural language questions about the codebase — powered by a RAG (Retrieval-Augmented Generation) pipeline.
 
-![RepoMind AI Demo](./demo-screenshot.jpg)
+![RepoMind AI Demo](./demo-pic.jpeg)
 
 ---
 
