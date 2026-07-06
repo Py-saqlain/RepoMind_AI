@@ -5,6 +5,15 @@ Chat with any GitHub repository. Paste a repo URL, index it, and ask natural lan
 ![RepoMind AI Demo](./demo-pic.jpeg)
 
 ---
+---
+title: RepoMind AI
+emoji: 🧠
+colorFrom: blue
+colorTo: green
+sdk: docker
+app_port: 7860
+pinned: false
+---
 
 ## What it does
 
