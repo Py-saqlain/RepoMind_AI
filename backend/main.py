@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from backend.routes.ingest import router as ingest_router
 from backend.routes.chat import router as chat_router
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI(title="RepoMind AI")
 
@@ -15,6 +16,4 @@ app.add_middleware(
 app.include_router(ingest_router)
 app.include_router(chat_router)
 
-@app.get("/")
-def root():
-    return {"message": "RepoMind AI is running"}
+app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")
