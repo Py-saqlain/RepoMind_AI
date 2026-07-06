@@ -1,10 +1,3 @@
-# 🧠 RepoMind AI
-
-Chat with any GitHub repository. Paste a repo URL, index it, and ask natural language questions about the codebase — powered by a RAG (Retrieval-Augmented Generation) pipeline.
-
-![RepoMind AI Demo](./demo-pic.jpeg)
-
----
 ---
 title: RepoMind AI
 emoji: 🧠
@@ -14,6 +7,15 @@ sdk: docker
 app_port: 7860
 pinned: false
 ---
+
+# 🧠 RepoMind AI
+
+Chat with any GitHub repository. Paste a repo URL, index it, and ask natural language questions about the codebase — powered by a RAG (Retrieval-Augmented Generation) pipeline.
+
+![RepoMind AI Demo](./demo-pic.jpeg)
+
+---
+
 
 ## What it does
 
