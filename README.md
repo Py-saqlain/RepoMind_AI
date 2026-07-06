@@ -12,19 +12,18 @@ pinned: false
 
 Chat with any GitHub repository. Paste a repo URL, index it, and ask natural language questions about the codebase — powered by a RAG (Retrieval-Augmented Generation) pipeline.
 
+🔗 **Live Demo:** [https://py-saqlain-repomindai.hf.space/](https://py-saqlain-repomindai.hf.space/)
+
 ![RepoMind AI Demo](./demo-pic.jpeg)
 
 ---
 
-
 ## What it does
 
 1. Paste any public GitHub repository URL
-2. Backend clones the repo, filters out noise (lock files, images, build artifacts, `node_modules`, etc.), and splits the remaining source code into chunks
+2. Backend clones the repo (shallow clone), filters out noise (lock files, images, build artifacts, `node_modules`, etc.), and splits the remaining source code into chunks
 3. Chunks are embedded and stored in a local FAISS vector index
 4. Ask a question — the most relevant code chunks are retrieved and passed to an LLM (Groq LLaMA 3.3 70B) to generate a grounded answer
-
-No repo history, credentials, or code ever leaves your machine except the specific chunks sent to the LLM for answering.
 
 ---
 
@@ -39,6 +38,7 @@ No repo history, credentials, or code ever leaves your machine except the specif
 | LLM | Groq — LLaMA 3.3 70B |
 | Repo Cloning | GitPython |
 | Frontend | Vanilla HTML/CSS/JS |
+| Deployment | Docker on Hugging Face Spaces |
 
 ---
 
@@ -70,12 +70,12 @@ User question ──► Retrieve top-k relevant chunks ──► Groq LLaMA 3.3 
 ```
 RepoMindAI/
 ├── backend/
-│   ├── main.py              # FastAPI app entry point
+│   ├── main.py              # FastAPI app entry point, serves frontend + API
 │   ├── routes/
 │   │   ├── ingest.py        # POST /ingest — clone, filter, chunk, embed
 │   │   └── chat.py          # POST /chat — RAG-based Q&A
 │   ├── services/
-│   │   ├── cloner.py        # Clones repo via GitPython
+│   │   ├── cloner.py        # Clones repo via GitPython (shallow clone)
 │   │   ├── filter.py        # Filters out non-essential files
 │   │   ├── chunker.py       # Splits code into chunks
 │   │   ├── embedder.py      # Embeds chunks, saves FAISS index
@@ -83,14 +83,15 @@ RepoMindAI/
 │   ├── schemas.py           # Pydantic request/response models
 │   └── config.py            # Environment configuration
 ├── frontend/
-│   └── index.html           # Single-page UI
+│   └── index.html           # Single-page UI, served by FastAPI
+├── Dockerfile
 ├── requirements.txt
 └── README.md
 ```
 
 ---
 
-## Getting Started
+## Getting Started (Local Setup)
 
 ### Prerequisites
 - Python 3.10+
@@ -100,8 +101,8 @@ RepoMindAI/
 ### Installation
 
 ```bash
-git clone https://github.com/<your-username>/RepoMindAI.git
-cd RepoMindAI
+git clone https://github.com/Py-saqlain/RepoMind_AI.git
+cd RepoMind_AI
 
 python -m venv venv
 venv\Scripts\activate        # Windows
@@ -118,18 +119,14 @@ Create a `.env` file in the root directory:
 GROQ_API_KEY=your_groq_api_key_here
 ```
 
-### Run the backend
+### Run
 
 ```bash
 uvicorn backend.main:app --reload --reload-exclude temp
 ```
 
-API will be available at `http://127.0.0.1:8000`  
+Visit `http://127.0.0.1:8000` — frontend and API are served from the same URL.
 Interactive API docs: `http://127.0.0.1:8000/docs`
-
-### Run the frontend
-
-Open `frontend/index.html` directly in your browser.
 
 ---
 
@@ -155,22 +152,24 @@ Open `frontend/index.html` directly in your browser.
 
 - **Shallow clone (`depth=1`)** — avoids downloading full commit history, keeping ingestion fast even for larger repos
 - **File filtering** — excludes lock files, binaries, `node_modules`, `.git`, and other non-source content to keep the vector index relevant
-- **FastEmbed over sentence-transformers** — smaller download size, faster cold start
+- **FastEmbed over sentence-transformers** — smaller download size, faster cold start, no HuggingFace Hub rate limits
 - **LCEL (LangChain Expression Language)** — modern, composable chain syntax over legacy `Chain` classes
+- **Docker + Hugging Face Spaces** — free, card-free deployment path for a full FastAPI backend + static frontend in one container
 
 ---
 
 ## Limitations
 
-- Currently indexes up to the first 100 filtered files per repo (configurable in `chunker.py`)
+- Indexes up to the first 100 filtered files per repo (configurable in `chunker.py`)
 - Files larger than ~30KB are skipped to avoid processing generated/minified code
 - No authentication layer — intended as a local development / portfolio demo tool
+- FAISS indexes are stored on local/container disk — on Hugging Face Spaces, indexed repos may need to be re-ingested after a container restart
 
 ---
 
 ## Author
 
-Built by Saqlain — Software Engineer specializing in Python, .NET, and LLM/RAG systems.
+Built by Muhammad Saqlain — Software Engineer specializing in Python, .NET, and LLM/RAG systems.
 
 - GitHub: [Py-saqlain](https://github.com/Py-saqlain)
 - HuggingFace: [py-saqlain](https://huggingface.co/py-saqlain)
